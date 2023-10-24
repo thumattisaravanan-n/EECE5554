@@ -1,0 +1,2 @@
+set(gnss_driver_MESSAGE_FILES "/home/nikhil/Desktop/EECE5554/LAB2/src/gps_driver/msg/gps_msg.msg")
+set(gnss_driver_SERVICE_FILES "")

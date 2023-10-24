@@ -1,0 +1,8 @@
+prefix=/home/nikhil/Desktop/EECE5554/LAB2/install
+
+Name: gps_driver
+Description: Description of gps_driver
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

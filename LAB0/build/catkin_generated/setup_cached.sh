@@ -7,9 +7,9 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH='/home/nikhil/Desktop/EECE5554/LAB0/devel:/opt/ros/noetic'
-export LD_LIBRARY_PATH='/opt/ros/noetic/lib'
-export PKG_CONFIG_PATH='/opt/ros/noetic/lib/pkgconfig'
+export CMAKE_PREFIX_PATH="/home/nikhil/Desktop/EECE5554/LAB0/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/nikhil/Desktop/EECE5554/LAB0/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/nikhil/Desktop/EECE5554/LAB0/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/nikhil/Desktop/EECE5554/LAB0/build'
 export ROSLISP_PACKAGE_DIRECTORIES='/home/nikhil/Desktop/EECE5554/LAB0/devel/share/common-lisp'
-export ROS_PACKAGE_PATH='/home/nikhil/Desktop/EECE5554/LAB0/src:/opt/ros/noetic/share'
+export ROS_PACKAGE_PATH="/home/nikhil/Desktop/EECE5554/LAB0/src:$ROS_PACKAGE_PATH"
