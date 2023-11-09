@@ -29,24 +29,24 @@ struct gps_msg_
     , Latitude(0.0)
     , Longitude(0.0)
     , Altitude(0.0)
-    , HDOP(0.0)
     , UTM_easting(0.0)
     , UTM_northing(0.0)
-    , UTC(0.0)
     , Zone(0)
-    , Letter()  {
+    , Letter()
+    , UTC(0.0)
+    , HDOP(0.0)  {
     }
   gps_msg_(const ContainerAllocator& _alloc)
     : Header(_alloc)
     , Latitude(0.0)
     , Longitude(0.0)
     , Altitude(0.0)
-    , HDOP(0.0)
     , UTM_easting(0.0)
     , UTM_northing(0.0)
-    , UTC(0.0)
     , Zone(0)
-    , Letter(_alloc)  {
+    , Letter(_alloc)
+    , UTC(0.0)
+    , HDOP(0.0)  {
   (void)_alloc;
     }
 
@@ -64,23 +64,23 @@ struct gps_msg_
    typedef double _Altitude_type;
   _Altitude_type Altitude;
 
-   typedef double _HDOP_type;
-  _HDOP_type HDOP;
-
    typedef double _UTM_easting_type;
   _UTM_easting_type UTM_easting;
 
    typedef double _UTM_northing_type;
   _UTM_northing_type UTM_northing;
 
-   typedef double _UTC_type;
-  _UTC_type UTC;
-
-   typedef int64_t _Zone_type;
+   typedef int32_t _Zone_type;
   _Zone_type Zone;
 
    typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _Letter_type;
   _Letter_type Letter;
+
+   typedef double _UTC_type;
+  _UTC_type UTC;
+
+   typedef double _HDOP_type;
+  _HDOP_type HDOP;
 
 
 
@@ -115,12 +115,12 @@ bool operator==(const ::gps_driver::gps_msg_<ContainerAllocator1> & lhs, const :
     lhs.Latitude == rhs.Latitude &&
     lhs.Longitude == rhs.Longitude &&
     lhs.Altitude == rhs.Altitude &&
-    lhs.HDOP == rhs.HDOP &&
     lhs.UTM_easting == rhs.UTM_easting &&
     lhs.UTM_northing == rhs.UTM_northing &&
-    lhs.UTC == rhs.UTC &&
     lhs.Zone == rhs.Zone &&
-    lhs.Letter == rhs.Letter;
+    lhs.Letter == rhs.Letter &&
+    lhs.UTC == rhs.UTC &&
+    lhs.HDOP == rhs.HDOP;
 }
 
 template<typename ContainerAllocator1, typename ContainerAllocator2>
@@ -177,12 +177,12 @@ struct MD5Sum< ::gps_driver::gps_msg_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "66b6da1d45662ada473059e6ceda61cd";
+    return "a06f48cc8edce72d1bb9548b3e6081a2";
   }
 
   static const char* value(const ::gps_driver::gps_msg_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x66b6da1d45662adaULL;
-  static const uint64_t static_value2 = 0x473059e6ceda61cdULL;
+  static const uint64_t static_value1 = 0xa06f48cc8edce72dULL;
+  static const uint64_t static_value2 = 0x1bb9548b3e6081a2ULL;
 };
 
 template<class ContainerAllocator>
@@ -205,12 +205,12 @@ struct Definition< ::gps_driver::gps_msg_<ContainerAllocator> >
 "float64 Latitude\n"
 "float64 Longitude\n"
 "float64 Altitude\n"
-"float64 HDOP\n"
 "float64 UTM_easting\n"
 "float64 UTM_northing\n"
-"float64 UTC\n"
-"int64 Zone\n"
+"int32 Zone\n"
 "string Letter\n"
+"float64 UTC\n"
+"float64 HDOP\n"
 "\n"
 "================================================================================\n"
 "MSG: std_msgs/Header\n"
@@ -249,12 +249,12 @@ namespace serialization
       stream.next(m.Latitude);
       stream.next(m.Longitude);
       stream.next(m.Altitude);
-      stream.next(m.HDOP);
       stream.next(m.UTM_easting);
       stream.next(m.UTM_northing);
-      stream.next(m.UTC);
       stream.next(m.Zone);
       stream.next(m.Letter);
+      stream.next(m.UTC);
+      stream.next(m.HDOP);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -282,18 +282,18 @@ struct Printer< ::gps_driver::gps_msg_<ContainerAllocator> >
     Printer<double>::stream(s, indent + "  ", v.Longitude);
     s << indent << "Altitude: ";
     Printer<double>::stream(s, indent + "  ", v.Altitude);
-    s << indent << "HDOP: ";
-    Printer<double>::stream(s, indent + "  ", v.HDOP);
     s << indent << "UTM_easting: ";
     Printer<double>::stream(s, indent + "  ", v.UTM_easting);
     s << indent << "UTM_northing: ";
     Printer<double>::stream(s, indent + "  ", v.UTM_northing);
-    s << indent << "UTC: ";
-    Printer<double>::stream(s, indent + "  ", v.UTC);
     s << indent << "Zone: ";
-    Printer<int64_t>::stream(s, indent + "  ", v.Zone);
+    Printer<int32_t>::stream(s, indent + "  ", v.Zone);
     s << indent << "Letter: ";
     Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.Letter);
+    s << indent << "UTC: ";
+    Printer<double>::stream(s, indent + "  ", v.UTC);
+    s << indent << "HDOP: ";
+    Printer<double>::stream(s, indent + "  ", v.HDOP);
   }
 };
 

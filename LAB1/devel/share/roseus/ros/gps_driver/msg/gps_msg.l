@@ -16,7 +16,7 @@
 
 (defclass gps_driver::gps_msg
   :super ros::object
-  :slots (_Header _Latitude _Longitude _Altitude _HDOP _UTM_easting _UTM_northing _UTC _Zone _Letter ))
+  :slots (_Header _Latitude _Longitude _Altitude _UTM_easting _UTM_northing _Zone _Letter _UTC _HDOP ))
 
 (defmethod gps_driver::gps_msg
   (:init
@@ -25,24 +25,24 @@
     ((:Latitude __Latitude) 0.0)
     ((:Longitude __Longitude) 0.0)
     ((:Altitude __Altitude) 0.0)
-    ((:HDOP __HDOP) 0.0)
     ((:UTM_easting __UTM_easting) 0.0)
     ((:UTM_northing __UTM_northing) 0.0)
-    ((:UTC __UTC) 0.0)
     ((:Zone __Zone) 0)
     ((:Letter __Letter) "")
+    ((:UTC __UTC) 0.0)
+    ((:HDOP __HDOP) 0.0)
     )
    (send-super :init)
    (setq _Header __Header)
    (setq _Latitude (float __Latitude))
    (setq _Longitude (float __Longitude))
    (setq _Altitude (float __Altitude))
-   (setq _HDOP (float __HDOP))
    (setq _UTM_easting (float __UTM_easting))
    (setq _UTM_northing (float __UTM_northing))
-   (setq _UTC (float __UTC))
    (setq _Zone (round __Zone))
    (setq _Letter (string __Letter))
+   (setq _UTC (float __UTC))
+   (setq _HDOP (float __HDOP))
    self)
   (:Header
    (&rest __Header)
@@ -60,24 +60,24 @@
   (:Altitude
    (&optional __Altitude)
    (if __Altitude (setq _Altitude __Altitude)) _Altitude)
-  (:HDOP
-   (&optional __HDOP)
-   (if __HDOP (setq _HDOP __HDOP)) _HDOP)
   (:UTM_easting
    (&optional __UTM_easting)
    (if __UTM_easting (setq _UTM_easting __UTM_easting)) _UTM_easting)
   (:UTM_northing
    (&optional __UTM_northing)
    (if __UTM_northing (setq _UTM_northing __UTM_northing)) _UTM_northing)
-  (:UTC
-   (&optional __UTC)
-   (if __UTC (setq _UTC __UTC)) _UTC)
   (:Zone
    (&optional __Zone)
    (if __Zone (setq _Zone __Zone)) _Zone)
   (:Letter
    (&optional __Letter)
    (if __Letter (setq _Letter __Letter)) _Letter)
+  (:UTC
+   (&optional __UTC)
+   (if __UTC (setq _UTC __UTC)) _UTC)
+  (:HDOP
+   (&optional __HDOP)
+   (if __HDOP (setq _HDOP __HDOP)) _HDOP)
   (:serialization-length
    ()
    (+
@@ -89,18 +89,18 @@
     8
     ;; float64 _Altitude
     8
-    ;; float64 _HDOP
-    8
     ;; float64 _UTM_easting
     8
     ;; float64 _UTM_northing
     8
-    ;; float64 _UTC
-    8
-    ;; int64 _Zone
-    8
+    ;; int32 _Zone
+    4
     ;; string _Letter
     4 (length _Letter)
+    ;; float64 _UTC
+    8
+    ;; float64 _HDOP
+    8
     ))
   (:serialize
    (&optional strm)
@@ -114,28 +114,18 @@
        (sys::poke _Longitude (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;; float64 _Altitude
        (sys::poke _Altitude (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
-     ;; float64 _HDOP
-       (sys::poke _HDOP (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;; float64 _UTM_easting
        (sys::poke _UTM_easting (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;; float64 _UTM_northing
        (sys::poke _UTM_northing (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
-     ;; float64 _UTC
-       (sys::poke _UTC (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
-     ;; int64 _Zone
-#+(or :alpha :irix6 :x86_64)
-       (progn (sys::poke _Zone (send s :buffer) (send s :count) :long) (incf (stream-count s) 8))
-#-(or :alpha :irix6 :x86_64)
-       (cond ((and (class _Zone) (= (length (_Zone . bv)) 2)) ;; bignum
-              (write-long (ash (elt (_Zone . bv) 0) 0) s)
-              (write-long (ash (elt (_Zone . bv) 1) -1) s))
-             ((and (class _Zone) (= (length (_Zone . bv)) 1)) ;; big1
-              (write-long (elt (_Zone . bv) 0) s)
-              (write-long (if (>= _Zone 0) 0 #xffffffff) s))
-             (t                                         ;; integer
-              (write-long _Zone s)(write-long (if (>= _Zone 0) 0 #xffffffff) s)))
+     ;; int32 _Zone
+       (write-long _Zone s)
      ;; string _Letter
        (write-long (length _Letter) s) (princ _Letter s)
+     ;; float64 _UTC
+       (sys::poke _UTC (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
+     ;; float64 _HDOP
+       (sys::poke _HDOP (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
@@ -148,45 +138,35 @@
      (setq _Longitude (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;; float64 _Altitude
      (setq _Altitude (sys::peek buf ptr- :double)) (incf ptr- 8)
-   ;; float64 _HDOP
-     (setq _HDOP (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;; float64 _UTM_easting
      (setq _UTM_easting (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;; float64 _UTM_northing
      (setq _UTM_northing (sys::peek buf ptr- :double)) (incf ptr- 8)
-   ;; float64 _UTC
-     (setq _UTC (sys::peek buf ptr- :double)) (incf ptr- 8)
-   ;; int64 _Zone
-#+(or :alpha :irix6 :x86_64)
-      (setf _Zone (prog1 (sys::peek buf ptr- :long) (incf ptr- 8)))
-#-(or :alpha :irix6 :x86_64)
-      (setf _Zone (let ((b0 (prog1 (sys::peek buf ptr- :integer) (incf ptr- 4)))
-                  (b1 (prog1 (sys::peek buf ptr- :integer) (incf ptr- 4))))
-              (cond ((= b1 -1) b0)
-                     ((and (= b1  0)
-                           (<= lisp::most-negative-fixnum b0 lisp::most-positive-fixnum))
-                      b0)
-                    ((= b1  0) (make-instance bignum :size 1 :bv (integer-vector b0)))
-                    (t (make-instance bignum :size 2 :bv (integer-vector b0 (ash b1 1)))))))
+   ;; int32 _Zone
+     (setq _Zone (sys::peek buf ptr- :integer)) (incf ptr- 4)
    ;; string _Letter
      (let (n) (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4) (setq _Letter (subseq buf ptr- (+ ptr- n))) (incf ptr- n))
+   ;; float64 _UTC
+     (setq _UTC (sys::peek buf ptr- :double)) (incf ptr- 8)
+   ;; float64 _HDOP
+     (setq _HDOP (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;;
    self)
   )
 
-(setf (get gps_driver::gps_msg :md5sum-) "66b6da1d45662ada473059e6ceda61cd")
+(setf (get gps_driver::gps_msg :md5sum-) "a06f48cc8edce72d1bb9548b3e6081a2")
 (setf (get gps_driver::gps_msg :datatype-) "gps_driver/gps_msg")
 (setf (get gps_driver::gps_msg :definition-)
       "Header Header
 float64 Latitude
 float64 Longitude
 float64 Altitude
-float64 HDOP
 float64 UTM_easting
 float64 UTM_northing
-float64 UTC
-int64 Zone
+int32 Zone
 string Letter
+float64 UTC
+float64 HDOP
 
 ================================================================================
 MSG: std_msgs/Header
@@ -208,6 +188,6 @@ string frame_id
 
 
 
-(provide :gps_driver/gps_msg "66b6da1d45662ada473059e6ceda61cd")
+(provide :gps_driver/gps_msg "a06f48cc8edce72d1bb9548b3e6081a2")
 
 

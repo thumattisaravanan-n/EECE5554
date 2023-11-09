@@ -9,19 +9,19 @@ import struct
 import std_msgs.msg
 
 class gps_msg(genpy.Message):
-  _md5sum = "66b6da1d45662ada473059e6ceda61cd"
+  _md5sum = "a06f48cc8edce72d1bb9548b3e6081a2"
   _type = "gps_driver/gps_msg"
   _has_header = False  # flag to mark the presence of a Header object
   _full_text = """Header Header
 float64 Latitude
 float64 Longitude
 float64 Altitude
-float64 HDOP
 float64 UTM_easting
 float64 UTM_northing
-float64 UTC
-int64 Zone
+int32 Zone
 string Letter
+float64 UTC
+float64 HDOP
 
 ================================================================================
 MSG: std_msgs/Header
@@ -39,8 +39,8 @@ time stamp
 #Frame this data is associated with
 string frame_id
 """
-  __slots__ = ['Header','Latitude','Longitude','Altitude','HDOP','UTM_easting','UTM_northing','UTC','Zone','Letter']
-  _slot_types = ['std_msgs/Header','float64','float64','float64','float64','float64','float64','float64','int64','string']
+  __slots__ = ['Header','Latitude','Longitude','Altitude','UTM_easting','UTM_northing','Zone','Letter','UTC','HDOP']
+  _slot_types = ['std_msgs/Header','float64','float64','float64','float64','float64','int32','string','float64','float64']
 
   def __init__(self, *args, **kwds):
     """
@@ -50,7 +50,7 @@ string frame_id
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       Header,Latitude,Longitude,Altitude,HDOP,UTM_easting,UTM_northing,UTC,Zone,Letter
+       Header,Latitude,Longitude,Altitude,UTM_easting,UTM_northing,Zone,Letter,UTC,HDOP
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -67,29 +67,29 @@ string frame_id
         self.Longitude = 0.
       if self.Altitude is None:
         self.Altitude = 0.
-      if self.HDOP is None:
-        self.HDOP = 0.
       if self.UTM_easting is None:
         self.UTM_easting = 0.
       if self.UTM_northing is None:
         self.UTM_northing = 0.
-      if self.UTC is None:
-        self.UTC = 0.
       if self.Zone is None:
         self.Zone = 0
       if self.Letter is None:
         self.Letter = ''
+      if self.UTC is None:
+        self.UTC = 0.
+      if self.HDOP is None:
+        self.HDOP = 0.
     else:
       self.Header = std_msgs.msg.Header()
       self.Latitude = 0.
       self.Longitude = 0.
       self.Altitude = 0.
-      self.HDOP = 0.
       self.UTM_easting = 0.
       self.UTM_northing = 0.
-      self.UTC = 0.
       self.Zone = 0
       self.Letter = ''
+      self.UTC = 0.
+      self.HDOP = 0.
 
   def _get_types(self):
     """
@@ -112,13 +112,15 @@ string frame_id
         length = len(_x)
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
       _x = self
-      buff.write(_get_struct_7dq().pack(_x.Latitude, _x.Longitude, _x.Altitude, _x.HDOP, _x.UTM_easting, _x.UTM_northing, _x.UTC, _x.Zone))
+      buff.write(_get_struct_5di().pack(_x.Latitude, _x.Longitude, _x.Altitude, _x.UTM_easting, _x.UTM_northing, _x.Zone))
       _x = self.Letter
       length = len(_x)
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+      _x = self
+      buff.write(_get_struct_2d().pack(_x.UTC, _x.HDOP))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -148,8 +150,8 @@ string frame_id
         self.Header.frame_id = str[start:end]
       _x = self
       start = end
-      end += 64
-      (_x.Latitude, _x.Longitude, _x.Altitude, _x.HDOP, _x.UTM_easting, _x.UTM_northing, _x.UTC, _x.Zone,) = _get_struct_7dq().unpack(str[start:end])
+      end += 44
+      (_x.Latitude, _x.Longitude, _x.Altitude, _x.UTM_easting, _x.UTM_northing, _x.Zone,) = _get_struct_5di().unpack(str[start:end])
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
@@ -159,6 +161,10 @@ string frame_id
         self.Letter = str[start:end].decode('utf-8', 'rosmsg')
       else:
         self.Letter = str[start:end]
+      _x = self
+      start = end
+      end += 16
+      (_x.UTC, _x.HDOP,) = _get_struct_2d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -180,13 +186,15 @@ string frame_id
         length = len(_x)
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
       _x = self
-      buff.write(_get_struct_7dq().pack(_x.Latitude, _x.Longitude, _x.Altitude, _x.HDOP, _x.UTM_easting, _x.UTM_northing, _x.UTC, _x.Zone))
+      buff.write(_get_struct_5di().pack(_x.Latitude, _x.Longitude, _x.Altitude, _x.UTM_easting, _x.UTM_northing, _x.Zone))
       _x = self.Letter
       length = len(_x)
       if python3 or type(_x) == unicode:
         _x = _x.encode('utf-8')
         length = len(_x)
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+      _x = self
+      buff.write(_get_struct_2d().pack(_x.UTC, _x.HDOP))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -217,8 +225,8 @@ string frame_id
         self.Header.frame_id = str[start:end]
       _x = self
       start = end
-      end += 64
-      (_x.Latitude, _x.Longitude, _x.Altitude, _x.HDOP, _x.UTM_easting, _x.UTM_northing, _x.UTC, _x.Zone,) = _get_struct_7dq().unpack(str[start:end])
+      end += 44
+      (_x.Latitude, _x.Longitude, _x.Altitude, _x.UTM_easting, _x.UTM_northing, _x.Zone,) = _get_struct_5di().unpack(str[start:end])
       start = end
       end += 4
       (length,) = _struct_I.unpack(str[start:end])
@@ -228,6 +236,10 @@ string frame_id
         self.Letter = str[start:end].decode('utf-8', 'rosmsg')
       else:
         self.Letter = str[start:end]
+      _x = self
+      start = end
+      end += 16
+      (_x.UTC, _x.HDOP,) = _get_struct_2d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -236,15 +248,21 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
+_struct_2d = None
+def _get_struct_2d():
+    global _struct_2d
+    if _struct_2d is None:
+        _struct_2d = struct.Struct("<2d")
+    return _struct_2d
 _struct_3I = None
 def _get_struct_3I():
     global _struct_3I
     if _struct_3I is None:
         _struct_3I = struct.Struct("<3I")
     return _struct_3I
-_struct_7dq = None
-def _get_struct_7dq():
-    global _struct_7dq
-    if _struct_7dq is None:
-        _struct_7dq = struct.Struct("<7dq")
-    return _struct_7dq
+_struct_5di = None
+def _get_struct_5di():
+    global _struct_5di
+    if _struct_5di is None:
+        _struct_5di = struct.Struct("<5di")
+    return _struct_5di

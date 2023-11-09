@@ -23,12 +23,12 @@ class gps_msg {
       this.Latitude = null;
       this.Longitude = null;
       this.Altitude = null;
-      this.HDOP = null;
       this.UTM_easting = null;
       this.UTM_northing = null;
-      this.UTC = null;
       this.Zone = null;
       this.Letter = null;
+      this.UTC = null;
+      this.HDOP = null;
     }
     else {
       if (initObj.hasOwnProperty('Header')) {
@@ -55,12 +55,6 @@ class gps_msg {
       else {
         this.Altitude = 0.0;
       }
-      if (initObj.hasOwnProperty('HDOP')) {
-        this.HDOP = initObj.HDOP
-      }
-      else {
-        this.HDOP = 0.0;
-      }
       if (initObj.hasOwnProperty('UTM_easting')) {
         this.UTM_easting = initObj.UTM_easting
       }
@@ -73,12 +67,6 @@ class gps_msg {
       else {
         this.UTM_northing = 0.0;
       }
-      if (initObj.hasOwnProperty('UTC')) {
-        this.UTC = initObj.UTC
-      }
-      else {
-        this.UTC = 0.0;
-      }
       if (initObj.hasOwnProperty('Zone')) {
         this.Zone = initObj.Zone
       }
@@ -90,6 +78,18 @@ class gps_msg {
       }
       else {
         this.Letter = '';
+      }
+      if (initObj.hasOwnProperty('UTC')) {
+        this.UTC = initObj.UTC
+      }
+      else {
+        this.UTC = 0.0;
+      }
+      if (initObj.hasOwnProperty('HDOP')) {
+        this.HDOP = initObj.HDOP
+      }
+      else {
+        this.HDOP = 0.0;
       }
     }
   }
@@ -104,18 +104,18 @@ class gps_msg {
     bufferOffset = _serializer.float64(obj.Longitude, buffer, bufferOffset);
     // Serialize message field [Altitude]
     bufferOffset = _serializer.float64(obj.Altitude, buffer, bufferOffset);
-    // Serialize message field [HDOP]
-    bufferOffset = _serializer.float64(obj.HDOP, buffer, bufferOffset);
     // Serialize message field [UTM_easting]
     bufferOffset = _serializer.float64(obj.UTM_easting, buffer, bufferOffset);
     // Serialize message field [UTM_northing]
     bufferOffset = _serializer.float64(obj.UTM_northing, buffer, bufferOffset);
-    // Serialize message field [UTC]
-    bufferOffset = _serializer.float64(obj.UTC, buffer, bufferOffset);
     // Serialize message field [Zone]
-    bufferOffset = _serializer.int64(obj.Zone, buffer, bufferOffset);
+    bufferOffset = _serializer.int32(obj.Zone, buffer, bufferOffset);
     // Serialize message field [Letter]
     bufferOffset = _serializer.string(obj.Letter, buffer, bufferOffset);
+    // Serialize message field [UTC]
+    bufferOffset = _serializer.float64(obj.UTC, buffer, bufferOffset);
+    // Serialize message field [HDOP]
+    bufferOffset = _serializer.float64(obj.HDOP, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -131,18 +131,18 @@ class gps_msg {
     data.Longitude = _deserializer.float64(buffer, bufferOffset);
     // Deserialize message field [Altitude]
     data.Altitude = _deserializer.float64(buffer, bufferOffset);
-    // Deserialize message field [HDOP]
-    data.HDOP = _deserializer.float64(buffer, bufferOffset);
     // Deserialize message field [UTM_easting]
     data.UTM_easting = _deserializer.float64(buffer, bufferOffset);
     // Deserialize message field [UTM_northing]
     data.UTM_northing = _deserializer.float64(buffer, bufferOffset);
-    // Deserialize message field [UTC]
-    data.UTC = _deserializer.float64(buffer, bufferOffset);
     // Deserialize message field [Zone]
-    data.Zone = _deserializer.int64(buffer, bufferOffset);
+    data.Zone = _deserializer.int32(buffer, bufferOffset);
     // Deserialize message field [Letter]
     data.Letter = _deserializer.string(buffer, bufferOffset);
+    // Deserialize message field [UTC]
+    data.UTC = _deserializer.float64(buffer, bufferOffset);
+    // Deserialize message field [HDOP]
+    data.HDOP = _deserializer.float64(buffer, bufferOffset);
     return data;
   }
 
@@ -150,7 +150,7 @@ class gps_msg {
     let length = 0;
     length += std_msgs.msg.Header.getMessageSize(object.Header);
     length += _getByteLength(object.Letter);
-    return length + 68;
+    return length + 64;
   }
 
   static datatype() {
@@ -160,7 +160,7 @@ class gps_msg {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '66b6da1d45662ada473059e6ceda61cd';
+    return 'a06f48cc8edce72d1bb9548b3e6081a2';
   }
 
   static messageDefinition() {
@@ -170,12 +170,12 @@ class gps_msg {
     float64 Latitude
     float64 Longitude
     float64 Altitude
-    float64 HDOP
     float64 UTM_easting
     float64 UTM_northing
-    float64 UTC
-    int64 Zone
+    int32 Zone
     string Letter
+    float64 UTC
+    float64 HDOP
     
     ================================================================================
     MSG: std_msgs/Header
@@ -230,13 +230,6 @@ class gps_msg {
       resolved.Altitude = 0.0
     }
 
-    if (msg.HDOP !== undefined) {
-      resolved.HDOP = msg.HDOP;
-    }
-    else {
-      resolved.HDOP = 0.0
-    }
-
     if (msg.UTM_easting !== undefined) {
       resolved.UTM_easting = msg.UTM_easting;
     }
@@ -251,13 +244,6 @@ class gps_msg {
       resolved.UTM_northing = 0.0
     }
 
-    if (msg.UTC !== undefined) {
-      resolved.UTC = msg.UTC;
-    }
-    else {
-      resolved.UTC = 0.0
-    }
-
     if (msg.Zone !== undefined) {
       resolved.Zone = msg.Zone;
     }
@@ -270,6 +256,20 @@ class gps_msg {
     }
     else {
       resolved.Letter = ''
+    }
+
+    if (msg.UTC !== undefined) {
+      resolved.UTC = msg.UTC;
+    }
+    else {
+      resolved.UTC = 0.0
+    }
+
+    if (msg.HDOP !== undefined) {
+      resolved.HDOP = msg.HDOP;
+    }
+    else {
+      resolved.HDOP = 0.0
     }
 
     return resolved;

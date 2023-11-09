@@ -7,16 +7,16 @@
           LONGITUDE
           ALTITUDE-VAL
           ALTITUDE
-          HDOP-VAL
-          HDOP
           UTM_EASTING-VAL
           UTM_EASTING
           UTM_NORTHING-VAL
           UTM_NORTHING
-          UTC-VAL
-          UTC
           ZONE-VAL
           ZONE
           LETTER-VAL
           LETTER
+          UTC-VAL
+          UTC
+          HDOP-VAL
+          HDOP
 ))
